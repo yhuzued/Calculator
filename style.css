@@ -1,0 +1,4 @@
+.bodyCalculator{
+    display: flex;
+    flex-direction: column;
+}
