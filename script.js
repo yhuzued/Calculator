@@ -1,120 +1,170 @@
-//create display
-let value = "";
-let secondValue = "";
-let firstOperand = "default";
-let choosenOperator = "default";
-let secondOperand = "default"
+// let just start from the begining
+let firstOperand = "";
+let secondOperand = "";
+let choosenOperator = "";
+let firstFinal = "";
+let secondFinal = "";
+
+let displayEquation = "";
+let displayResult = ""
+let nonPermaValue = "";
+
+let finalValue = "";
 
 const display = document.querySelector(".display");
-display.textContent = "Start"
+display.textContent = "Start";
 
 const operand = document.querySelectorAll(".operand");
-operand.forEach(item =>{
-    item.addEventListener("click", function(e){
-        if (choosenOperator === "default"){
-            value += item.value;
-            display.textContent = value;
+operand.forEach(element =>
+    element.addEventListener("click", () =>{
+        if (!(firstFinal == "")){
+            firstFinal = "";
+        } 
+        if (firstOperand === "") {
+            nonPermaValue += element.value;
+            display.textContent = nonPermaValue;
         } else {
-            secondOperand = "";
-            secondValue += item.value;
-            secondOperand += secondValue;
+            secondOperand += element.value;
+            display.textContent = `${firstOperand} ${choosenOperator} ${secondOperand}`
+        }
+        console.log({nonPermaValue});
+        console.log({firstOperand});
+        console.log({choosenOperator});
+        console.log({secondOperand});
+    })
+)
+
+const operator= document.querySelectorAll(".operator");
+operator.forEach(element =>
+    element.addEventListener("click", () =>{
+        //when al value isnt ready
+        if (firstFinal === ""){
+            if (firstOperand === "" || secondOperand === "" || choosenOperator === ""){
+                if (firstOperand === ""){
+                    firstOperand = nonPermaValue;
+                    nonPermaValue = "";
+                    choosenOperator = element.value;
+                    display.textContent = `${firstOperand} ${choosenOperator} ${secondOperand}`
+                } else {
+                    secondOperand = nonPermaValue;
+                    nonPermaValue = "";
+                    choosenOperator = element.value;
+                    display.textContent = `${firstOperand} ${choosenOperator} ${secondOperand}`
+                }
+                //when ready
+            } else if (!(firstOperand === "" && secondOperand === "" && choosenOperator === "")) {
+                finalValue = operate(firstOperand, choosenOperator, secondOperand);
+                firstOperand = finalValue;
+                choosenOperator = element.value;
+                secondOperand = "";
+                display.textContent = `${finalValue} ${choosenOperator}`;
+            }
+        } else {
+            firstOperand = firstFinal;
+            firstFinal = "";
+            choosenOperator = element.value;
             display.textContent = `${firstOperand} ${choosenOperator} ${secondOperand}`;
         }
-        console.log(firstOperand);
-        console.log(choosenOperator);
-        console.log(secondOperand);
+        console.log({nonPermaValue});
+        console.log({firstOperand});
+        console.log({choosenOperator});
+        console.log({secondOperand});
     })
+)
+
+const equal = document.querySelector(".equals")
+equal.addEventListener("click", function(e){
+    /// sedang di sini
+    if (!(firstOperand === "" || secondOperand === "" || choosenOperator === "")){
+        finalValue = operate(firstOperand, choosenOperator, secondOperand);
+        firstOperand = "";
+        firstFinal = finalValue;
+        choosenOperator = "";
+        secondOperand = "";
+        display.textContent = `${finalValue}`;
+    } 
 })
 
-const operator = document.querySelectorAll(".operator");
-operator.forEach(item =>{
-    item.addEventListener("click", function(e){
-        if (display.textContent === "Start"){
-            console.log("Bro, you can't calculate without clicking any number")
-        } else {
-            if (firstOperand === "default"){
-                firstOperand = value;
-                choosenOperator = item.value;
-                console.log(firstOperand);
-                console.log(choosenOperator);
-                console.log(secondOperand);
-            } else if (choosenOperator === "default") {
-                choosenOperator = item.value;
-                console.log(firstOperand);
-                console.log(choosenOperator);
-                console.log(secondOperand);
-            } else if (secondOperand === "default" || secondOperand === "") {
-                secondOperand += item.value;
-                choosenOperator = item.value;
-                secondOperand = secondValue;
-                console.log(firstOperand);
-                console.log(choosenOperator);
-                console.log(secondOperand);
-            } else if (choosenOperator === "+"
-                    || choosenOperator === "-"
-                    || choosenOperator === "/"
-                    || choosenOperator === "*" && !(secondOperand === "default")) {
-                display.textContent = `${firstOperand} ${choosenOperator}`;
-                operandClicked();
-                choosenOperator = item.value;
-                console.log(firstOperand);
-                console.log(choosenOperator);
-                console.log(secondOperand);
-            } 
-        value += item.value;
-        display.textContent = `${firstOperand} ${choosenOperator}`;
+const clear = document.querySelector(".clear")
+clear.addEventListener("click", function(){
+    firstOperand = "";
+    secondOperand = "";
+    choosenOperator = "";
+    firstFinal = "";
+    secondFinal = "";
+
+    displayEquation = "";
+    displayResult = ""
+    nonPermaValue = "";
+
+    finalValue = "";
+    display.textContent = "Start";
+})
+
+const decimal = document.querySelector("#decimal")
+decimal.addEventListener("click", () =>{
+    // sedang di sini
+    if (nonPermaValue === "" && firstOperand === ""){
+        // do nothing
+    } else if (nonPermaValue.includes(".")){
+        // also do nothinge
+    } else if (firstOperand === "") {
+        nonPermaValue += decimal.value;
+        display.textContent = nonPermaValue;
+    } else if (!(secondOperand.includes("."))) {
+        secondOperand += decimal.value;
+        display.textContent = `${firstOperand} ${choosenOperator} ${secondOperand}`
+    }
+})
+
+const backspace = document.querySelector(".backspace")
+backspace.addEventListener("click", function(){
+    // sampai sini
+    if (!(nonPermaValue === "")){
+        let del = nonPermaValue;
+        let nonPermaAfterDeleted = del.slice(0, -1);
+        nonPermaValue = nonPermaAfterDeleted;
+        display.textContent = nonPermaValue;
+        if (nonPermaValue === ""){
+            display.textContent = "Start";
         }
-    })
-})
-
-const equal = document.querySelector(".equals");
-equal.addEventListener("click", () =>{
-    if (secondOperand === "default" || secondOperand === ""){
-        //do nothing
-    } else{
-        equalsClicked();
+    } else if (!(secondOperand ==="")){
+        let del = secondOperand;
+        let nonPermaAfterDeleted = del.slice(0, -1);
+        secondOperand = nonPermaAfterDeleted;
+        display.textContent = `${firstOperand} ${choosenOperator} ${secondOperand}`;
     }
 })
 
-const zero = document.querySelector("#zero");
-zero.addEventListener("click", () =>{
-    if (value.charAt(0) === "0"){
-        value = "";
+const zero = document.querySelector("#zero")
+zero.addEventListener("click", function(){
+    if (!(firstFinal == "")){
+        firstFinal = "";
+    } 
+    if (firstOperand === "") {
+        if (nonPermaValue.charAt(0) === "0" && nonPermaValue.charAt(1) === "."){
+            nonPermaValue += zero.value;
+            display.textContent = nonPermaValue;
+        } else {
+            nonPermaValue = zero.value;
+            display.textContent = nonPermaValue;
+        }
+    } else {
+        if (secondOperand.charAt(0) === "0" && secondOperand.charAt(1) === "."){
+            secondOperand += zero.value;
+            display.textContent = `${firstOperand} ${choosenOperator} ${secondOperand}`
+        } else {
+            secondOperand = zero.value;
+            display.textContent = `${firstOperand} ${choosenOperator} ${secondOperand}`
+        }
     }
+    console.log({nonPermaValue});
+    console.log({firstOperand});
+    console.log({choosenOperator});
+    console.log({secondOperand});
 })
 
 //function
-
-function equalsClicked(){
-    if(!(firstOperand === "default"
-        && secondOperand === "default"
-        && choosenOperator === "default")){
-            value = operate(firstOperand, choosenOperator, secondOperand)
-            display.textContent = value;
-            firstOperand = value;
-            secondOperand = "default";
-            choosenOperator = "default";
-            secondValue = "";
-            value = "";
-            console.log(firstOperand);
-            console.log(choosenOperator);
-            console.log(secondOperand);
-        }
-        
-    if (firstOperand === undefined){
-        display.textContent = "Start";
-        firstOperand = "default";
-    }
-}
-
-function operandClicked(){
-    value = operate(firstOperand, choosenOperator, secondOperand)
-    display.textContent = value;
-    firstOperand = value;
-    secondOperand = "default";
-    secondValue = "";
-}
-
 function operate(a, operator, b,){
     switch(operator){
         case "+":
@@ -134,17 +184,51 @@ function operate(a, operator, b,){
 }
 
 function add(a, b){
-    return parseInt(a) + parseInt(b);
+    if (a === "Bruh?"){
+        a = 0;
+    }
+    if (b === "Bruh?"){
+        b = 0;
+    }
+    let sum = parseFloat(a) + parseFloat(b);
+    return sum = +sum.toFixed(2);
+    
 }
 
 function substract(a, b){
-    return parseInt(a) - parseInt(b);
+    if (a === "lmao"){
+        a = 0;
+    }
+    if (b === "lmao"){
+        b = 0;
+    }
+    let sum = parseFloat(a) - parseFloat(b);
+    return  sum = +sum.toFixed(2);
 }
 
 function multiply(a, b){
-    return parseInt(a) * parseInt(b);
+    if (a === "lmao"){
+        a = 0;
+    }
+    if (b === "lmao"){
+        b = 0;
+    }
+    let sum = parseFloat(a) * parseFloat(b);
+    return sum = +sum.toFixed(2);
 }
 
 function divide(a, b){
-    return parseInt(a) / parseInt(b);
+    if (a === "lmao"){
+        a = 0;
+    }
+    if (b === "lmao"){
+        b = 0;
+    }
+
+    if (b === "Start"){
+        return "lmao"
+    }
+
+    let sum = parseFloat(a) / parseFloat(b);
+    return  sum = +sum.toFixed(2);
 }
