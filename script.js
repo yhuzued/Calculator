@@ -1,4 +1,4 @@
-// let just start from the begining
+// let just 0 from the begining
 let firstOperand = "";
 let secondOperand = "";
 let choosenOperator = "";
@@ -12,7 +12,7 @@ let nonPermaValue = "";
 let finalValue = "";
 
 const display = document.querySelector(".display");
-display.textContent = "Start";
+display.textContent = "0";
 
 const operand = document.querySelectorAll(".operand");
 operand.forEach(element =>
@@ -98,20 +98,23 @@ clear.addEventListener("click", function(){
     nonPermaValue = "";
 
     finalValue = "";
-    display.textContent = "Start";
+    display.textContent = "0";
 })
 
 const decimal = document.querySelector("#decimal")
 decimal.addEventListener("click", () =>{
-    // sedang di sini
     if (nonPermaValue === "" && firstOperand === ""){
         // do nothing
+        nonPermaValue = "0."
+        display.textContent = nonPermaValue;
     } else if (nonPermaValue.includes(".")){
         // also do nothinge
     } else if (firstOperand === "") {
         nonPermaValue += decimal.value;
         display.textContent = nonPermaValue;
-    } else if (!(secondOperand.includes("."))) {
+    } else if (secondOperand.includes(".") || secondOperand === "") {
+        // do nothinge
+    } else {
         secondOperand += decimal.value;
         display.textContent = `${firstOperand} ${choosenOperator} ${secondOperand}`
     }
@@ -126,7 +129,7 @@ backspace.addEventListener("click", function(){
         nonPermaValue = nonPermaAfterDeleted;
         display.textContent = nonPermaValue;
         if (nonPermaValue === ""){
-            display.textContent = "Start";
+            display.textContent = "0";
         }
     } else if (!(secondOperand ==="")){
         let del = secondOperand;
@@ -142,19 +145,19 @@ zero.addEventListener("click", function(){
         firstFinal = "";
     } 
     if (firstOperand === "") {
-        if (nonPermaValue.charAt(0) === "0" && nonPermaValue.charAt(1) === "."){
-            nonPermaValue += zero.value;
+        if (nonPermaValue === "" || nonPermaValue === "0"){
+            nonPermaValue = zero.value;
             display.textContent = nonPermaValue;
         } else {
-            nonPermaValue = zero.value;
+            nonPermaValue += zero.value;
             display.textContent = nonPermaValue;
         }
     } else {
-        if (secondOperand.charAt(0) === "0" && secondOperand.charAt(1) === "."){
-            secondOperand += zero.value;
+        if (secondOperand === "" || secondOperand === "0"){
+            secondOperand = zero.value;
             display.textContent = `${firstOperand} ${choosenOperator} ${secondOperand}`
         } else {
-            secondOperand = zero.value;
+            secondOperand += zero.value;
             display.textContent = `${firstOperand} ${choosenOperator} ${secondOperand}`
         }
     }
@@ -225,7 +228,7 @@ function divide(a, b){
         b = 0;
     }
 
-    if (b === "Start"){
+    if (b === "0"){
         return "lmao"
     }
 
